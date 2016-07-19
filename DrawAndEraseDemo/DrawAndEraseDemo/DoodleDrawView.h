@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, DrawType) {
-    DrawTypeNone,
+    DrawTypeNone = 0,
     DrawTypeDraw,
     DrawTypeErase
 };

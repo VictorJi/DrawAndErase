@@ -112,4 +112,15 @@
     [self presentViewController:controller animated:YES completion:nil];
 }
 
+#pragma mark - draw view delegate
+
+- (void)doodleDrawView:(DoodleDrawView *)doodleDrawView lineStartEndDrawing:(DrawType)type startEnd:(BOOL)start lineWidth:(CGFloat)lineWidth lineColor:(UIColor *)lineColor point:(CGPoint)point {
+    NSString *s = start ? @"start" : @"end";
+    NSLog(@"draw %@ at x:%.f y:%f", s, point.x, point.y);
+}
+
+- (void)doodleDrawView:(DoodleDrawView *)doodleDrawView lineDrawingPoint:(CGPoint)point {
+    NSLog(@"draw to x:%f y:%f", point.x, point.y);
+}
+
 @end

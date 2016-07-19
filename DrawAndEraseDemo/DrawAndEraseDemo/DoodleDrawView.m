@@ -98,6 +98,10 @@
     return CGPointMake(self.bounds.size.width * point.x, self.bounds.size.height * point.y);
 }
 
+- (CGPoint)convertPointInViewToPercentMode:(CGPoint)point {
+    return CGPointMake(point.x / self.bounds.size.width, point.y / self.bounds.size.height);
+}
+
 #pragma mark - draw actions
 
 - (void)drawFrom:(CGPoint)startPoint To:(CGPoint)endPoint LineWidth:(CGFloat)width LineColor:(UIColor *)color {
@@ -192,8 +196,9 @@
     NSValue *val = [NSValue valueWithCGPoint:point];
     [self.currentLine addObject:val];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(doodleDrawView:lineStartEndDrawing:startEnd:lineWidth:lineColor:point:)]) {
-        [self.delegate doodleDrawView:self lineStartEndDrawing:self.type startEnd:YES lineWidth:self.type == DrawTypeDraw ? self.lineWidth : self.eraseWidth lineColor:self.type == DrawTypeDraw ? self.lineColor : nil point:point];
+    if (self.type > DrawTypeNone && self.delegate && [self.delegate respondsToSelector:@selector(doodleDrawView:lineStartEndDrawing:startEnd:lineWidth:lineColor:point:)]) {
+        CGPoint percentPoint = [self convertPointInViewToPercentMode:point];
+        [self.delegate doodleDrawView:self lineStartEndDrawing:self.type startEnd:YES lineWidth:self.type == DrawTypeDraw ? self.lineWidth : self.eraseWidth lineColor:self.type == DrawTypeDraw ? self.lineColor : nil point:percentPoint];
     }
 }
 
@@ -217,8 +222,9 @@
     NSValue *pointValue = [NSValue valueWithCGPoint:point];
     [self.currentLine addObject:pointValue];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(doodleDrawView:lineDrawingPoint:)]) {
-        [self.delegate doodleDrawView:self lineDrawingPoint:point];
+    if (self.type > DrawTypeNone && self.delegate && [self.delegate respondsToSelector:@selector(doodleDrawView:lineDrawingPoint:)]) {
+        CGPoint percentPoint = [self convertPointInViewToPercentMode:point];
+        [self.delegate doodleDrawView:self lineDrawingPoint:percentPoint];
     }
 }
 
@@ -227,9 +233,9 @@
         return;
     }
     
-    NSLog(@"end track");
-    if (self.delegate && [self.delegate respondsToSelector:@selector(doodleDrawView:lineStartEndDrawing:startEnd:lineWidth:lineColor:point:)]) {
-        [self.delegate doodleDrawView:self lineStartEndDrawing:self.type startEnd:NO lineWidth:self.type == DrawTypeDraw ? self.lineWidth : self.eraseWidth lineColor:self.type == DrawTypeDraw ? self.lineColor : nil point:point];
+    if (self.type > DrawTypeNone && self.delegate && [self.delegate respondsToSelector:@selector(doodleDrawView:lineStartEndDrawing:startEnd:lineWidth:lineColor:point:)]) {
+        CGPoint percentPoint = [self convertPointInViewToPercentMode:point];
+        [self.delegate doodleDrawView:self lineStartEndDrawing:self.type startEnd:NO lineWidth:self.type == DrawTypeDraw ? self.lineWidth : self.eraseWidth lineColor:self.type == DrawTypeDraw ? self.lineColor : nil point:percentPoint];
     }
 }
 
